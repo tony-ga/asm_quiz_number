@@ -1,13 +1,13 @@
-; --- ADIVINA EL NUMERO ENTERO ---
+; --- adivina el numero entero ---
 
 section .data
-	out1 db "Adivina el numero entero secreto entre 0-9: "
+	out1 db "adivina el numero entero secreto entre 0-9: "
 	out1_len equ $ - out1
 
-	out2 db "Adivinaste :)", 10
+	out2 db "adivinaste :)", 10
 	out2_len equ $ - out2
 
-	out3 db "Intentalo nuevamente: "
+	out3 db "intentalo nuevamente: "
 	out3_len equ $ - out3
 
 section .bss
@@ -19,11 +19,11 @@ section .text
 	global _start
 
 _start:
-	; 1. PREPARACION (Esconder el numero)
-	mov rax, 0x9b	
-	push rax	
-
-	xor rax, rax
+	; 1. preparacion (esconder el numero)
+	mov rax, 6
+	xor al, dl
+	push rax
+	push rdx
 
 	mov rax, 1
 	mov rdi, 1
@@ -39,9 +39,7 @@ input:
 	mov rdx, 8
 	syscall
 
-	pop rax
 	call comprobar_numero
-	push rax
 
 	mov rax, 1
 	mov rdi, 1
@@ -56,12 +54,13 @@ comprobar_numero:
 
 	sub rbx, 0x30
 
-	xor rax, 157
+	mov rdx, [rsp + 8]		; recuperamos la llave dinamica
+	mov rax, [rsp + 16]		; recuperamos el secreto cifrado
+
+	xor al, dl	; desciframos: (6 xor llave)
 
 	cmp bl, al 
 	jz correct
-
-	xor rax, 157
 
 	ret
 
