@@ -20,8 +20,8 @@ section .text
 
 _start:
 	; 1. PREPARACION (Esconder el numero)
-	mov rax, 6	; El numero secreto es 6
-	push rax	; <--- LO GUARDAMOS EN EL STACK
+	mov rax, 0x9b	
+	push rax	
 
 	xor rax, rax
 
@@ -56,8 +56,12 @@ comprobar_numero:
 
 	sub rbx, 0x30
 
+	xor rax, 157
+
 	cmp bl, al 
 	jz correct
+
+	xor rax, 157
 
 	ret
 
