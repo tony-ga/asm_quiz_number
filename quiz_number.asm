@@ -31,38 +31,35 @@ _start:
 	mov rdx, out1_len
 	syscall
 
+input:
+	
 	mov rax, 0
 	mov rdi, 0
 	mov rsi, user_input
 	mov rdx, 8
 	syscall
-	jmp thread
 
-try:
+	pop rax
+	call comprobar_numero
+	push rax
+
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, out3
 	mov rdx, out3_len
 	syscall
 
-	mov rax, 0
-	mov rdi, 0
-	mov rsi, user_input
-	mov rdx, 8
-	syscall
+	jmp input
 
-thread:
-	; COMPARACION (RECUPERAR EL STACK)
+comprobar_numero:
 	movzx rbx, byte [user_input]
 
 	sub rbx, 0x30
 
-	pop rax		; <--- SACAMOS EL 6 DEL STACK Y SE QUEDA EN RAX
+	cmp bl, al 
+	jz correct
 
-	cmp bl, al
-	jz correct ; SI bl - al = 0 SE CUMPLE LA CONDICION
-	push rax
-	jmp try
+	ret
 
 correct:
 
@@ -71,10 +68,8 @@ correct:
 	mov rsi, out2
 	mov rdx, out2_len
 	syscall
-	jmp end
 
 end:
-
 	mov rax, 60
-	mov rdi, 0
+	xor rdi, rdi
 	syscall
